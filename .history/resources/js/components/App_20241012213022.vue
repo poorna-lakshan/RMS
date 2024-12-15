@@ -155,7 +155,7 @@
             { title: 'Warehouse Transition', icon: 'mdi-transfer', route: '/warehousetransition' },
              ], },
           { title: 'Supplier', icon: 'mdi-truck', route: '/supplierlist' },
-          { title: 'Customer', icon: 'mdi-account', route: '/customerlist' },
+          { title: 'Custommer', icon: 'mdi-account', route: '/customerlist' },
           {
             title: 'Products',
             icon: 'mdi-cart',
