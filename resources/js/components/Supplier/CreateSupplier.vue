@@ -7,11 +7,20 @@
         </v-card-title>
 
         <v-card-title>
-          <v-tabs v-model="tab" background-color="deep-purple accent-4" dark slider-color="yellow" class="mb-6">
-            <v-tab>Supplier Info</v-tab>
-            <v-tab>Reference Info</v-tab>
-          </v-tabs>
-        </v-card-title>
+  <v-tabs
+    v-model="tab"
+    slider-color="#f78166"
+    class="mb-6"
+  >
+    <v-tab>
+      <v-icon left>mdi-account</v-icon> Supplier Info
+    </v-tab>
+    <v-tab>
+      <v-icon left>mdi-book-open</v-icon> Reference Info
+    </v-tab>
+  </v-tabs>
+</v-card-title>
+
 
         <v-card-subtitle>
           <v-tabs-items v-model="tab">

@@ -7,7 +7,7 @@
       </v-snackbar>
       <v-card class="pa-6 elevation-12">
         <v-card-title>
-          <v-icon left>mdi-tag-plus</v-icon>
+          <v-icon left>mdi-cube-outline</v-icon>
           <span class="headline">{{ isEditMode ? 'Edit Category' : 'Create New Category' }}</span>
         </v-card-title>
 

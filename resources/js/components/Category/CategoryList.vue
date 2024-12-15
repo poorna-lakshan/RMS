@@ -22,7 +22,7 @@
         </v-tooltip>
 
         <v-card-title>
-          <v-icon left size="24">mdi-tag</v-icon>
+          <v-icon left size="24">mdi-cube-outline</v-icon>
           Category List
           <v-spacer></v-spacer>
           <v-text-field

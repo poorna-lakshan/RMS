@@ -1,6 +1,5 @@
 <template>
     <v-app>
-      <!-- Conditionally render the top app bar and navigation drawer based on the route -->
       <v-app-bar
         v-if="!isAuthPage"
         app
@@ -8,15 +7,9 @@
         dark
         elevation="2"
       >
-        <!-- Drawer Toggle Button -->
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-        <!-- Title in the Navbar -->
         <v-toolbar-title></v-toolbar-title>
-
         <v-spacer></v-spacer>
-
-        <!-- Right Side Actions -->
         <v-btn icon>
           <v-icon>mdi-bell</v-icon>
         </v-btn>
@@ -34,33 +27,32 @@
           <v-list>
             <v-list-item @click="login">
               <v-list-item-icon>
-                <v-icon>mdi-login</v-icon>
+                <v-icon small>mdi-login</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title>Login</v-list-item-title>
+                <v-list-item-title style="font-size: 14px;">Login</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item @click="register">
               <v-list-item-icon>
-                <v-icon>mdi-account-plus</v-icon>
+                <v-icon small>mdi-account-plus</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title>Register</v-list-item-title>
+                <v-list-item-title style="font-size: 14px;">Register</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item @click="logout">
               <v-list-item-icon>
-                <v-icon>mdi-logout</v-icon>
+                <v-icon small>mdi-logout</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title>Logout</v-list-item-title>
+                <v-list-item-title style="font-size: 14px;">Logout</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
         </v-menu>
       </v-app-bar>
 
-      <!-- Navigation Drawer -->
       <v-navigation-drawer
         v-if="!isAuthPage"
         app
@@ -75,38 +67,60 @@
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title class="text-h7 white--text">Logo</v-list-item-title>
-
             </v-list-item-content>
           </v-list-item>
 
           <v-divider></v-divider>
 
-          <!-- Navigation Links -->
           <v-list-item-group>
             <v-list-item
               v-for="item in menuItems"
               :key="item.title"
               :to="item.route"
               link
+              v-if="!item.subItems"
             >
               <v-list-item-icon>
                 <v-icon>{{ item.icon }}</v-icon>
               </v-list-item-icon>
-
               <v-list-item-content>
                 <v-list-item-title class="white--text">{{ item.title }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+
+            <v-list-group v-if="item.subItems" v-for="item in menuItems" :key="item.title" :value="item.value">
+              <template v-slot:activator>
+                <v-list-item-icon>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title class="white--text">{{ item.title }}</v-list-item-title>
+                </v-list-item-content>
+              </template>
+
+              <v-list-item class="mx-4"
+                v-for="subItem in item.subItems"
+                :key="subItem.title"
+                :to="subItem.route"
+                link
+              >
+                <v-list-item-icon>
+                  <v-icon small>{{ subItem.icon }}</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content >
+                  <v-list-item-title class="white--text">{{ subItem.title }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-group>
           </v-list-item-group>
         </v-list>
       </v-navigation-drawer>
 
-      <!-- Main Content Area -->
       <v-main>
-        <v-container fluid >
-          <div v-if="showAlert" >
+        <v-container fluid>
+          <div v-if="showAlert">
             <v-alert
-               v-if="!isAuthPage"
+              v-if="!isAuthPage"
               class="mx-3"
               type="success"
               dismissible
@@ -134,12 +148,26 @@
         username: 'User',
         menuItems: [
           { title: 'Dashboard', icon: 'mdi-view-dashboard', route: '/' },
-          { title: 'Products', icon: 'mdi-cart', route: '/productlist' },
-          { title: 'Category', icon: 'mdi-tag-plus', route: '/categorylist' },
+
+          { title: 'Category', icon: 'mdi-cube-outline', route: '/categorylist' },
           { title: 'Item Class', icon: 'mdi-tag', route: '/itemclasslist' },
-          { title: 'Warehouse', icon: 'mdi-warehouse', route: '/warehouselist' },
+          { title: 'Warehouse', icon: 'mdi-warehouse', route: '/warehouselist',  subItems: [
+            { title: 'Warehouse Transition', icon: 'mdi-transfer', route: '/warehousetransition' },
+             ], },
           { title: 'Supplier', icon: 'mdi-truck', route: '/supplierlist' },
-          { title: 'Settings', icon: 'mdi-cog', route: '/settings' }
+          { title: 'Custommer', icon: 'mdi-account', route: '/customerlist' },
+          {
+            title: 'Products',
+            icon: 'mdi-cart',
+            subItems: [
+              { title: 'Update Price', icon: 'mdi-cash', route: '/updateprice' },
+              { title: 'Product List', icon: 'mdi-cart-outline', route: '/productlist' },
+              { title: 'GRN', icon: 'mdi-receipt', route: '/grn' }
+
+            ],
+          },
+
+
         ]
       };
     },

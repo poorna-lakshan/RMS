@@ -9,15 +9,27 @@
         <v-card-title>
           <v-tabs
             v-model="tab"
-            background-color="deep-purple accent-4"
-            dark
-            slider-color="yellow"
+
+            slider-color="#f78166"
             class="mb-6"
+
           >
-            <v-tab>General Info</v-tab>
-            <v-tab>Pricing</v-tab>
-            <v-tab>Stock</v-tab>
-            <v-tab>Additional Details</v-tab>
+          <v-tab>
+      <v-icon left>mdi-information</v-icon>
+      General Info
+    </v-tab>
+    <v-tab>
+      <v-icon left>mdi-currency-usd</v-icon>
+      Pricing
+    </v-tab>
+    <v-tab>
+      <v-icon left>mdi-package</v-icon>
+      Stock
+    </v-tab>
+    <v-tab>
+      <v-icon left>mdi-details</v-icon>
+      Additional Details
+    </v-tab>
           </v-tabs>
         </v-card-title>
 
@@ -279,7 +291,7 @@
                   <v-col cols="12" md="6">
                     <v-text-field
                       v-model="product.Custom4"
-                      label="custom4"
+                      label="Custom4"
                       type="text"
                       outlined
                       dense
@@ -425,7 +437,7 @@
   }
   .v-tabs .v-tab--active {
     background-color: #e8eaf6;
-    color: #1e88e5;
+    color: #062e52;
     box-shadow: inset 0 -2px 0 0 #ffeb3b;
   }
   .v-btn {

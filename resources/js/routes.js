@@ -15,6 +15,10 @@ import CreateCustomer from './components/Customer/CreateCustomer.vue';
 import CustomerList from './components/Customer/CustomerList.vue';
 import CreateSupplier from './components/Supplier/CreateSupplier.vue';
 import SupplierList from './components/Supplier/SupplierList.vue';
+import UpdatePrice from './components/Product/UpdatePrice.vue';
+import Grn from './components/Product/Grn.vue';
+import WarehouseTransition from './components/WareHouse/WarehouseTransition.vue';
+
 Vue.use(VueRouter);
 
 export const routes = [
@@ -95,6 +99,27 @@ export const routes = [
         path: '/createsupplier',
         component: CreateSupplier
       },
+      {
+        name: 'updateprice',
+        path: '/updateprice',
+        component: UpdatePrice
+      },
+      {
+        name: 'grn',
+        path: '/grn',
+        component: Grn
+      },
+        {
+        name: 'grn',
+        path: '/grn',
+        component: Grn
+      },
+      {
+        name: 'warehousetransition',
+        path: '/warehousetransition',
+        component: WarehouseTransition
+      },
+
 
 
 ];
