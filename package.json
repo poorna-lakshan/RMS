@@ -28,6 +28,7 @@
         "@mdi/font": "^7.4.47",
         "vue-axios": "^3.2.4",
         "vue-router": "^3.6.5",
+        "vue-toastr": "^2.1.2",
         "vuetify": "2.5"
     }
 }

@@ -1,0 +1,24 @@
+/* Custom success notification */
+.toast-success {
+    background-color: #28a745 !important;  /* Green */
+    color: white !important;               /* White text */
+  }
+  
+  /* Custom error notification */
+  .toast-error {
+    background-color: #dc3545 !important;  /* Red */
+    color: white !important;               /* White text */
+  }
+  
+  /* Custom warning notification */
+  .toast-warning {
+    background-color: #ffc107 !important; /* Yellow */
+    color: black !important;               /* Black text */
+  }
+  
+  /* Custom info notification */
+  .toast-info {
+    background-color: #17a2b8 !important; /* Blue */
+    color: white !important;               /* White text */
+  }
+  
