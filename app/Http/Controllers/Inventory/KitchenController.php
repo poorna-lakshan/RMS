@@ -43,7 +43,53 @@ class KitchenController extends Controller
         }
 
     }
+public function update(Request $request, $id)
+{
+    // Validate the request data
+    $validator = Validator::make($request->all(), [
+        'code' => 'required|string|max:50',
+        'name' => 'required|string|max:50',
+    ]);
 
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Validation errors',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    // Find the kitchen record
+    $kitchen = Kitchen::find($id);
+
+    if (!$kitchen) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Kitchen not found'
+        ], 404);
+    }
+
+    try {
+        // Update the kitchen
+        $kitchen->update([
+            'code' => $request->code,
+            'name' => $request->name,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kitchen updated successfully',
+            'data' => $kitchen
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update kitchen',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
   public function delete($id)
   {
       // Find the ItemCategory by ID

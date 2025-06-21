@@ -9,6 +9,7 @@ use App\Http\Controllers\Inventory\ItemClassController;
 use App\Http\Controllers\Inventory\WarehouseController;
 use App\Http\Controllers\Inventory\KitchenController;
 use App\Http\Controllers\Purchasing\VendorController;
+use App\Http\Controllers\Sales\CustomerController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -67,6 +68,14 @@ Route::group(['prefix' => 'kitchen'], function () {
     Route::get('/{id}', [KitchenController::class, 'show']);
     Route::put('/{id}', [KitchenController::class, 'update']);
     Route::delete('/{id}', [KitchenController::class, 'delete']);
+});
+
+Route::group(['prefix' => 'customer'], function () {
+    Route::get('/', [CustomerController::class, 'index']);
+    Route::post('/', [CustomerController::class, 'create']);
+    Route::get('/{id}', [CustomerController::class, 'show']);
+    Route::put('/{id}', [CustomerController::class, 'update']);
+    Route::delete('/{id}', [CustomerController::class, 'delete']);
 });
 
 Route::group(['prefix' => 'vendor'], function () {

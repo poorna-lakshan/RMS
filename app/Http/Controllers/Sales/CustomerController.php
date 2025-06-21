@@ -78,7 +78,13 @@ class CustomerController extends Controller
 
     return response()->json(['message' => 'Customer updated successfully'], 200);
   }
+ public function index()
+  {
+      // Retrieve all ItemCategories
+      $itemCategories = Customer::all();
 
+      return response()->json($itemCategories);
+  }
 
   public function delete($id)
   {

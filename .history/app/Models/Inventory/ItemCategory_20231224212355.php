@@ -12,7 +12,6 @@ class ItemCategory extends Model
     protected $table = 'item_category';
 
     protected $fillable = [
-        'index',
         'description'
     ];
 }

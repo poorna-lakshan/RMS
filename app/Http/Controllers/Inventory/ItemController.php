@@ -178,6 +178,15 @@ class ItemController extends Controller
       return response()->json(['message' => 'Item deleted successfully'], 200);
   }
 
+   public function index()
+  {
+      // Retrieve all ItemCategories
+      $itemCategories = Item::all();
+
+      return response()->json($itemCategories);
+  }
+
+
   public function getAll()
   {
       // Retrieve all ItemCategories
