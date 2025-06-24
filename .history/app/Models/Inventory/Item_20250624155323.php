@@ -40,4 +40,11 @@ class Item extends Model
         'custom5',
         'image',
     ];
+
+    public function warehouses()
+{
+    return $this->belongsToMany(Warehouse::class, 'item_ware_house')
+        ->withPivot('qty', 'avg_cost')
+        ->withTimestamps();
+}
 }

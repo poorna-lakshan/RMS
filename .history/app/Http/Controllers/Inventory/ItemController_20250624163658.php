@@ -215,7 +215,131 @@ public function create(Request $request)
 
 
 
- 
+  use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+
+public function update(Request $request, $id)
+{
+    // Step 1: Validate the request
+    $validator = Validator::make($request->all(), [
+        'code' => 'required|string',
+        'description' => 'required|string|max:50',
+        'class_id' => 'required',
+        'category_id' => 'required',
+        'uom' => 'required',
+        'costing_method' => 'required',
+        'vendor_id' => 'required',
+        'sales_acc' => 'required',
+        'cost_of_sales_acc' => 'required',
+        'inventory_acc' => 'required',
+        'unit_cost' => 'required|numeric|min:0',
+        'price_level1' => 'required|numeric|min:0',
+        'price_level2' => 'required|numeric|min:0',
+        'price_level3' => 'required|numeric|min:0',
+        'discount_amt' => 'required|numeric|min:0',
+        'discount_presentage' => 'required|numeric|min:0',
+        'reorder_qty' => 'required|numeric|min:0',
+        'minimum_qty' => 'required|numeric|min:0',
+        'barcode' => 'required|string',
+        'kot' => 'required',
+        'bot' => 'required',
+        'custom1' => 'required',
+        'custom2' => 'required',
+        'custom3' => 'required',
+        'custom4' => 'required',
+        'custom5' => 'required',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'warehouses' => 'required|json',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()], 422);
+    }
+
+    // Step 2: Decode warehouse data
+    $warehouses = json_decode($request->input('warehouses'), true);
+    if (!is_array($warehouses)) {
+        return response()->json(['error' => 'Invalid warehouse data format'], 422);
+    }
+
+    DB::beginTransaction();
+
+    try {
+        // Step 3: Find the item
+        $item = Item::findOrFail($id);
+
+        // Step 4: Handle image update
+        $imagePath = $item->image;
+        if ($request->hasFile('image')) {
+            if ($imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            $imagePath = $request->file('image')->store('images/items', 'public');
+        }
+
+        // Step 5: Update item fields
+        $item->update([
+            'code' => $request->code,
+            'description' => $request->description,
+            'class_id' => $request->class_id,
+            'category_id' => $request->category_id,
+            'uom' => $request->uom,
+            'costing_method' => $request->costing_method,
+            'vendor_id' => $request->vendor_id,
+            'sales_acc' => $request->sales_acc,
+            'cost_of_sales_acc' => $request->cost_of_sales_acc,
+            'inventory_acc' => $request->inventory_acc,
+            'unit_cost' => $request->unit_cost,
+            'price_level1' => $request->price_level1,
+            'price_level2' => $request->price_level2,
+            'price_level3' => $request->price_level3,
+            'discount_amt' => $request->discount_amt,
+            'discount_presentage' => $request->discount_presentage,
+            'reorder_qty' => $request->reorder_qty,
+            'minimum_qty' => $request->minimum_qty,
+            'barcode' => $request->barcode,
+            'kot' => $request->kot,
+            'bot' => $request->bot,
+            'custom1' => $request->custom1,
+            'custom2' => $request->custom2,
+            'custom3' => $request->custom3,
+            'custom4' => $request->custom4,
+            'custom5' => $request->custom5,
+            'image' => $imagePath,
+        ]);
+
+        // Step 6: Sync warehouse pivot data
+        $warehouseData = [];
+        foreach ($warehouses as $wh) {
+            $warehouseId = $wh['warehouse_id'] ?? $wh['ware_house_id'] ?? null;
+            if (!$warehouseId) {
+                throw new \Exception("Missing warehouse_id in warehouses array");
+            }
+
+            $warehouseData[$warehouseId] = [
+                'qty' => $wh['qty'] ?? 0,
+                'avg_cost' => $wh['avg_cost'] ?? $request->unit_cost,
+            ];
+        }
+
+        $item->warehouses()->sync($warehouseData);
+
+        DB::commit();
+
+        return response()->json(['message' => 'Item updated successfully'], 200);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        return response()->json([
+            'error' => 'Failed to update item',
+            'details' => $e->getMessage()
+        ], 500);
+    }
+}
+
 
 public function destroy($id)
 {

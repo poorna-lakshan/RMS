@@ -6,64 +6,52 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Inventory\Item;
-use App\Models\Inventory\Warehouse;
 use Illuminate\Support\Facades\Storage;
- use Illuminate\Support\Facades\DB;
 class ItemController extends Controller
 {
+    public function create(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'code' => 'required|string',
+            'description' => 'required|string|max:50',
+            'class_id' => 'required',
+            'category_id' => 'required',
+            'uom' => 'required',
+            'costing_method' => 'required',
+            'vendor_id' => 'required',
+            'sales_acc' => 'required',
+            'cost_of_sales_acc' => 'required',
+            'inventory_acc' => 'required',
+            'warehouses.*.warehouse_id' => 'required|exists:warehouses,id',
+            'unit_cost' => 'required',
+            'price_level1' => 'required',
+            'price_level2' => 'required',
+            'price_level3' => 'required',
+            'discount_amt' => 'required',
+            'discount_presentage' => 'required',
+            'reorder_qty' => 'required',
+            'minimum_qty' => 'required',
+            'barcode' => 'required',
+            'kot' => 'required',
+            'bot' => 'required',
+            'custom1' => 'required',
+            'custom2' => 'required',
+            'custom3' => 'required',
+            'custom4' => 'required',
+            'custom5' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
-public function create(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'code' => 'required|string',
-        'description' => 'required|string|max:50',
-        'class_id' => 'required',
-        'category_id' => 'required',
-        'uom' => 'required',
-        'costing_method' => 'required',
-        'vendor_id' => 'required',
-        'sales_acc' => 'required',
-        'cost_of_sales_acc' => 'required',
-        'inventory_acc' => 'required',
-        'warehouses' => 'required|json',
-        'unit_cost' => 'required',
-        'price_level1' => 'required',
-        'price_level2' => 'required',
-        'price_level3' => 'required',
-        'discount_amt' => 'required',
-        'discount_presentage' => 'required',
-        'reorder_qty' => 'required',
-        'minimum_qty' => 'required',
-        'barcode' => 'required',
-        'kot' => 'required',
-        'bot' => 'required',
-        'custom1' => 'required',
-        'custom2' => 'required',
-        'custom3' => 'required',
-        'custom4' => 'required',
-        'custom5' => 'required',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    ]);
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['error' => $validator->errors()], 422);
-    }
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
 
-    $imagePath = "";
-    if ($request->hasFile('image')) {
+        $imagePath ="";
+         if ($request->hasFile('image')) {
         $imagePath = $request->file('image')->store('images/items', 'public');
-    }
-
-    $warehouses = json_decode($request->input('warehouses'), true);
-
-    if (!is_array($warehouses)) {
-        return response()->json(['error' => 'Invalid warehouses format'], 422);
-    }
-
-    DB::beginTransaction();
-
-    try {
-        $item = Item::create([
+        }
+        $user = Item::create([
             'code' => $request->code,
             'description' => $request->description,
             'class_id' => $request->class_id,
@@ -93,30 +81,19 @@ public function create(Request $request)
             'image' => $imagePath,
         ]);
 
-        $warehouseData = [];
-        foreach ($warehouses as $wh) {
-            // Use correct pivot foreign key field name: ware_house_id or warehouse_id based on your pivot
-            $warehouseId = $wh['ware_house_id'] ?? $wh['warehouse_id'] ?? null;
-            if (!$warehouseId) {
-                throw new \Exception("Warehouse ID missing in warehouses data");
-            }
-            $warehouseData[$warehouseId] = [
-                'qty' => 0,
-                'avg_cost' => $request->unit_cost,
-            ];
-        }
+         $warehouseData = [];
+         $warehouses = json_decode($request->input('warehouses'), true);
+    foreach ($warehouses as $wh) {
+        $warehouseData[$wh['warehouse_id']] = [
+            'quantity' => 0,
+            'cost' => $request->unit_cost,
+        ];
+    }
 
-        $item->warehouses()->attach($warehouseData);
-
-        DB::commit();
+    $user->warehouses()->attach($warehouseData);
 
         return response()->json(['message' => 'Item created successfully'], 201);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['error' => 'Failed to create item: '.$e->getMessage()], 500);
     }
-}
-
 
 
     public function update(Request $request, $id)
@@ -213,43 +190,7 @@ public function create(Request $request)
       return response()->json(['message' => 'Item deleted successfully'], 200);
   }
 
-
-
- 
-
-public function destroy($id)
-{
-    DB::beginTransaction();
-
-    try {
-        // 1. Find the item
-        $item = Item::findOrFail($id);
-
-        // 2. Detach all warehouse links (from pivot table)
-        $item->warehouses()->detach();
-
-        // 3. Optionally delete the item's image
-        if ($item->image) {
-            \Storage::disk('public')->delete($item->image);
-        }
-
-        // 4. Delete the item itself
-        $item->delete();
-
-        DB::commit();
-
-        return response()->json(['message' => 'Item deleted successfully'], 200);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'error' => 'Failed to delete item',
-            'details' => $e->getMessage()
-        ], 500);
-    }
-}
-
-  public function index()
+   public function index()
   {
       // Retrieve all ItemCategories
       $itemCategories = Item::all();

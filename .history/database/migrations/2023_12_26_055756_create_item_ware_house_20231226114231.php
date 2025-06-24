@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('ware_house_id');
             $table->unsignedBigInteger('item_id');
-             $table->decimal('qty',18,2);
-            $table->decimal('avg_cost',18,2);
             $table->timestamps();
 
             $table->foreign('ware_house_id')->references('id')->on('ware_house')->onDelete('cascade');

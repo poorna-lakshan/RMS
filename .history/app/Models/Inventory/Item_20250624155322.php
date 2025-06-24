@@ -33,11 +33,18 @@ class Item extends Model
         'barcode',
         'kot',
         'bot',
-        'csutom1',
-        'csutom2',
-        'csutom3',
-        'csutom4',
-        'csutom5',
+        'custom1',
+        'custom2',
+        'custom3',
+        'custom4',
+        'custom5',
         'image',
     ];
+
+    public function warehouses()
+{
+    return $this->belongsToMany(Warehouse::class, 'item_ware_house')
+        ->withPivot('qty', 'avg_cost')
+        ->withTimestamps();
+}
 }

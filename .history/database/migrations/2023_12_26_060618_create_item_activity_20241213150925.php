@@ -11,22 +11,30 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('item_batch', function (Blueprint $table) {
+        Schema::create('item_activity', function (Blueprint $table) {
             $table->id();
-            $table->string('batch_no');
+            $table->integer('doc_type');
             $table->unsignedBigInteger('ware_house_id');
+            $table->unsignedBigInteger('batch_no');
+            $table->string('reference_no');
+            $table->string('date');
+            $table->string('trans_type');
+            $table->string('doc_reference');
             $table->unsignedBigInteger('item_id');
             $table->decimal('qty',18,2);
-            $table->string('purchase_no');
             $table->decimal('unit_cost',18,2);
+            $table->decimal('retail_price',18,2);
+            $table->decimal('qoh',18,2);
             $table->decimal('price_level1',18,2);
             $table->decimal('price_level2',18,2);
             $table->decimal('price_level3',18,2);
-            $table->decimal('expire_date',18,2);
+            $table->string('grn_no');
+            $table->boolean('is_void');
             $table->timestamps();
 
             $table->foreign('ware_house_id')->references('id')->on('ware_house')->onDelete('cascade');
             $table->foreign('item_id')->references('id')->on('item')->onDelete('cascade');
+            $table->foreign('batch_no')->references('id')->on('item_batch')->onDelete('cascade');
         });
     }
 
@@ -35,6 +43,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('item_batch');
+        Schema::dropIfExists('item_activity');
     }
 };

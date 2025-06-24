@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('doc_type');
             $table->unsignedBigInteger('ware_house_id');
+            $table->unsignedBigInteger('batch_no');
             $table->string('reference_no');
             $table->string('date');
             $table->string('trans_type');
