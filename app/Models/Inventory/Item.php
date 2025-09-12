@@ -39,6 +39,7 @@ class Item extends Model
         'custom4',
         'custom5',
         'image',
+        'warehouses'
     ];
 
     public function warehouses()

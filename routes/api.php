@@ -10,6 +10,7 @@ use App\Http\Controllers\Inventory\WarehouseController;
 use App\Http\Controllers\Inventory\KitchenController;
 use App\Http\Controllers\Purchasing\VendorController;
 use App\Http\Controllers\Sales\CustomerController;
+use App\Http\Controllers\Sales\InvoiceController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -85,5 +86,6 @@ Route::group(['prefix' => 'vendor'], function () {
     Route::put('/{id}', [VendorController::class, 'update']);
     Route::delete('/{id}', [VendorController::class, 'delete']);
 });
+ Route::get('/invoice_data', [InvoiceController::class, 'getAllData']);
 
 

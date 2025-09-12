@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('class_id');
             $table->unsignedBigInteger('category_id');
             $table->string('uom');
+            $table->string('warehouses');
             $table->string('costing_method');
             $table->integer('vendor_id');
             $table->integer('sales_acc');
