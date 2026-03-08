@@ -1,0 +1,21 @@
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+
+class ConvertEmptyStringsToNull
+{
+    public function handle(Request $request, Closure $next)
+    {
+        $request->merge(array_map(function ($value) {
+            if (is_array($value)) {
+                // Recursively handle arrays
+                return array_map(fn($v) => ($v === 'null' ? null : $v), $value);
+            }
+            return ($value === 'null' ? null : $value);
+        }, $request->all()));
+
+        return $next($request);
+    }
+}
